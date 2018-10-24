@@ -13,7 +13,13 @@ function [J grad] = nnCostFunction(nn_params, ...
 %   The returned parameter grad should be a "unrolled" vector of the
 %   partial derivatives of the neural network.
 %
-
+%   1) you need to manually fill in all the bias col for each layer
+%.  2) for y is (m,1) matrix, you need to first convert it into a (m, K) matrix
+%         Note: The vector y passed into the function is a vector of labels
+%               containing values from 1..K. You need to map this vector into a 
+%               binary vector of 1's and 0's to be used with the neural network
+%               cost function.
+%
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
 Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
@@ -30,7 +36,9 @@ J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
 
-% ====================== YOUR CODE HERE ======================
+
+
+% =========================== Part 1 Forward propagation ============================%
 % Instructions: You should complete the code by working through the
 %               following parts.
 %
@@ -39,16 +47,54 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
+
+% define commonly used variables
+bias_col = ones(m, 1);
+thetas = {Theta1, Theta2};
+num_of_layers = length(thetas) + 1;
+A = {X}; % store A = {X, a1, output}
+theta_square = 0;
+
+% reshape y: m * 1 into y_vector: m * k matrix
+% this might help you:
+% eye(5)(1,:):  1   0   0   0   0
+% eye(5)(2,:):  0   1   0   0   0
+% eye(5)(3,:):  0   0   1   0   0
+% eye(5)(4,:):  0   0   0   1   0
+% eye(5)(4,:):  0   0   0   0   1
+% eye(5)(:, 2): the 2nd col
+y_vector = eye(num_labels)(y',:);
+
+% calculate forward propagation and store in A list
+for i = 1:length(thetas)
+    % forward propagation
+    a = [bias_col, A{i}];
+    z = a * (thetas{i})'; 
+    A{i + 1} = sigmoid(z);
+    % regularization 
+    theta_square += sum(thetas{i}(:,2:end)(:) .^ 2); % chop 1st col off, 1st col doesn't have to be 1
+end
+
+% lg cost part
+output = A{num_of_layers};
+cost_total = log(output) .* y_vector + log(1 - output) .* (1 - y_vector);
+cost_avg = (-1 / m) * sum(cost_total(:));
+
+% theta regularization part
+theta_square_avg = (lambda / (2 * m)) * theta_square;
+
+% calculate the cost
+J = cost_avg + theta_square_avg;
+
+
+% =========================== Part 2 Back-prop ============================%
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
 %         Theta2_grad, respectively. After implementing Part 2, you can check
 %         that your implementation is correct by running checkNNGradients
 %
-%         Note: The vector y passed into the function is a vector of labels
-%               containing values from 1..K. You need to map this vector into a 
-%               binary vector of 1's and 0's to be used with the neural network
-%               cost function.
+
 %
 %         Hint: We recommend implementing backpropagation using a for-loop
 %               over the training examples if you are implementing it for the 
@@ -60,28 +106,11 @@ Theta2_grad = zeros(size(Theta2));
 %               backpropagation. That is, you can compute the gradients for
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
-%
 
-% thetas = {theta1}
-bias_col = ones(m, 1);
-thetas = {Theta1, Theta2};
-num_of_layers = length(thetas) + 1;
-A = {X} % store A = {X, a1, a2, ...}
 
-% calculate forward propagation and store in A list
-for i = 1:(num_of_layers - 1)
-    a = [bias_col, A{i}];
-    z = a * (thetas{i})'; 
-    A{i + 1} = sigmoid(z);
-end
 
-delta = 
-cost_total = log(a2) * y' + log(1 - a2) * y';
 
-% calculate the regularized part
-% -------------------------------------------------------------
-
-% =========================================================================
+% =========================== Output ============================%
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
