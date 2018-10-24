@@ -62,24 +62,23 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% thetas = {theta1}
+bias_col = ones(m, 1);
+thetas = {Theta1, Theta2};
+num_of_layers = length(thetas) + 1;
+A = {X} % store A = {X, a1, a2, ...}
 
+% calculate forward propagation and store in A list
+for i = 1:(num_of_layers - 1)
+    a = [bias_col, A{i}];
+    z = a * (thetas{i})'; 
+    A{i + 1} = sigmoid(z);
+end
 
+delta = 
+cost_total = log(a2) * y' + log(1 - a2) * y';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% calculate the regularized part
 % -------------------------------------------------------------
 
 % =========================================================================
