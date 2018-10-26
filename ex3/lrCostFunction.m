@@ -36,14 +36,15 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
+H = sigmoid(X * theta); % m rows, each row is value of H
+part1 = y .* log(H);           % part1 in cost fuction
+part2 = (1 - y) .* log(1 - H); % part2 in cost function: log(1 - H) NOT 1 - log(H)!!
+% add the regularization
+theta_regularized = theta; % should not regularize theta0
+theta_regularized(1) = 0;
+J = -sum(part1 + part2) / m + lambda / (2 * m) * (theta_regularized' * theta_regularized);
 
-
-
-
-
-
-
-
+grad = (X' * (H - y)) ./ m + lambda / m * theta_regularized;
 
 % =============================================================
 

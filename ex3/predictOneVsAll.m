@@ -15,7 +15,7 @@ num_labels = size(all_theta, 1);
 p = zeros(size(X, 1), 1);
 
 % Add ones to the X data matrix
-X = [ones(m, 1) X];
+X = [ones(m, 1) X]; % add 1 to first column so that we could have theta0 as bias
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Complete the following code to make predictions using
@@ -31,9 +31,8 @@ X = [ones(m, 1) X];
 %       
 
 
-
-
-
+[val, idx] = max(sigmoid(X * all_theta'), [], 2); % max(A, [], 2) max for each row
+p = idx;
 
 
 % =========================================================================

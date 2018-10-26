@@ -43,24 +43,26 @@ X = [ones(m, 1) X];
 %     options = optimset('GradObj', 'on', 'MaxIter', 50);
 % 
 %     % Run fmincg to obtain the optimal theta
-%     % This function will return theta and the cost 
+%     % This function will return theta and the cost (... means goes to next line)
 %     [theta] = ...
 %         fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...
 %                 initial_theta, options);
 %
+initial_theta = zeros(n + 1, 1);
 
+options = optimset('GradObj', 'on', 'MaxIter', 50);
 
-
-
-
-
-
-
-
-
+for current_class = 1:num_labels    % num_labels is total num of classes/bucket
+    labeled_y_for_cur_class = (y == current_class);
+    % A[row_num,:] the whole row for `row_num`
+    [all_theta(current_class,:)] = fmincg ( ...
+        @(theta)(lrCostFunction(theta, X, labeled_y_for_cur_class, lambda)), ...
+        initial_theta, ...
+        options ...
+    );
+end
 
 
 % =========================================================================
-
 
 end

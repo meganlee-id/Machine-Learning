@@ -21,13 +21,16 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+activation = X;
+thetas = {Theta1, Theta2};
 
+for layer = 1:2
+    activation_with_bias = [ones(size(activation,1),1) activation];
+    activation = sigmoid(activation_with_bias * (thetas{layer})');
+end
 
-
-
-
-
-
+[values, index] = max(activation, [], 2);
+p = index;
 
 % =========================================================================
 
