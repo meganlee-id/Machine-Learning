@@ -53,9 +53,27 @@ error_val   = zeros(m, 1);
 
 % ---------------------- Sample Solution ----------------------
 
+%========== input size =============%
+% disp("size X: "); 
+% disp(size(X));      % m X 3
+% disp("size Xval: ");
+% disp(size(Xval));   % m X 3
 
+% disp("size y: ");
+% disp(size(y));      % m X 1
+% disp("size yval: ");
+% disp(size(yval));   % m X 1
 
-
+for i = 1:m
+    % tak first i columns from X/Xval/y/yval
+    X_train = X(1:i, :);
+    y_train = y(1:i);
+    % get trained theta from X_cur/y_cur
+    theta = trainLinearReg(X_train, y_train, lambda);
+    % take [1:i] col from training set, take ALL col/datapoint from validation set
+    error_train(i) = linearRegCostFunction(X_train, y_train, theta, 0);
+    error_val(i)   = linearRegCostFunction(Xval,    yval,    theta, 0);
+end
 
 
 
