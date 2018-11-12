@@ -4,6 +4,9 @@ function [U, S] = pca(X)
 %   Returns the eigenvectors U, the eigenvalues (on diagonal) in S
 %
 
+% input size
+% disp(size(X));  15 X 11
+
 % Useful values
 [m, n] = size(X);
 
@@ -21,8 +24,8 @@ S = zeros(n);
 %
 
 
-
-
+SIGMA = 1 / m * X' * X;
+[U, S, V] = svd(SIGMA);
 
 
 
