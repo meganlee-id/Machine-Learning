@@ -23,10 +23,21 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
-
-
-
-
+rates = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+count = numel(rates);
+best  = 300;
+for i = 1:count;
+  for j = 1:count;
+    model= svmTrain(X, y, rates(i), @(x1, x2) gaussianKernel(x1, x2, rates(j)));
+    predictions = svmPredict(model, Xval);
+    prediction = mean(double(predictions ~= yval));
+    if prediction < best;
+      best = prediction;
+      C = rates(i);
+      sigma = rates(j);
+    end
+  end
+end
 
 
 % =========================================================================

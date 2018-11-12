@@ -14,13 +14,21 @@ sim = 0;
 %               and x2 computed using a Gaussian kernel with bandwidth
 %               sigma
 %
-%
 
+sim =  exp(-sum((x1 - x2) .^ 2) / (2 * (sigma ^ 2)));
 
+%------------ An alternative way to implement using norm -----------
+% how to use 'norm' function
+% A = [
+%    1
+%    2
+%    3
+% ]
+% norm(A)
+% ans =  3.7417
+% (1^2 + 2^2 + 3^2) = 14 = (3.7417 ^ 2)
 
-
-
+%----------- sim =  exp(-norm(x1 - x2) ^ 2 / (2 * (sigma ^ 2))); -----
 
 % =============================================================
-    
 end
