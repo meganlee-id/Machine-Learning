@@ -42,13 +42,11 @@ Theta_grad = zeros(size(Theta));
 low_range_vec = R .* (X * Theta' - Y);
 main_cost = sum(sum(low_range_vec .^ 2));
 reg_theta = sum(sum(Theta .^ 2));
-reg_X = sum(sum(X .^ 2));
+reg_X     = sum(sum(X .^ 2));
 
 
 J = (1 / 2) * (main_cost + lambda * (reg_theta + reg_X));
-
 X_grad     = low_range_vec  * Theta + lambda * X;
-
 Theta_grad = low_range_vec' * X     + lambda * Theta;
 
 
